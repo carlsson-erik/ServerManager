@@ -1,14 +1,16 @@
 package servermanager;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Erik
  */
-public class UserPackage {
+public class UserPackage implements Serializable{
     private String data;
     private int command;
     
-    UserPackage(int command, String data){
+    public UserPackage(int command, String data){
         this.data = data;
         this.command = command;
     }

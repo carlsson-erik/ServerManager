@@ -3,6 +3,7 @@ package servermanager;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Erik
  */
-public class User implements Runnable {
+public class User implements Runnable,Serializable {
 
     private Thread t;
 
@@ -33,7 +34,8 @@ public class User implements Runnable {
 
     public User(int id, Socket socket) {
         this.id = id;
-        profileName = null;
+        messages = new ArrayList();
+        profileName = "TestName";
         requestedUser = 0;
         connectedUser = 0;
         t = new Thread(this, "user:" + id);
@@ -106,9 +108,9 @@ public class User implements Runnable {
             //Send Message
         case 010 :
             
-            if(connectedUser !=0){
+            //if(connectedUser !=0){
                 messages.add(uPack.getData());
-            }
+          //  }
             
             break;
             //SetPrfileName
@@ -200,6 +202,13 @@ public class User implements Runnable {
      */
     public void setRequestUsersUpdate(boolean requestUsersUpdate) {
         this.requestUsersUpdate = requestUsersUpdate;
+    }
+
+    /**
+     * @return the profileName
+     */
+    public String getProfileName() {
+        return profileName;
     }
 
 }
