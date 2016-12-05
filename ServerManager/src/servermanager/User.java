@@ -21,7 +21,11 @@ public class User implements Runnable {
     private String profileName;
     private int requestedUser;
     private int connectedUser;
-    private ArrayList<UserPackage> userPackages;
+    private ArrayList<String> messages;
+    
+    private boolean requestUsersUpdate;
+    
+    
 
     private Socket socket;
     private ObjectOutputStream output;
@@ -30,6 +34,8 @@ public class User implements Runnable {
     public User(int id, Socket socket) {
         this.id = id;
         profileName = null;
+        requestedUser = 0;
+        connectedUser = 0;
         t = new Thread(this, "user:" + id);
         this.socket = socket;
         t.start();
@@ -91,16 +97,43 @@ public class User implements Runnable {
     }
 
     public void readInputObject(UserPackage uPack) {
-
+        switch(uPack.getCommand()){
+        //requestConnection
+        case 001 :
+            requestedUser = Integer.parseInt(uPack.getData());
+            
+            break;
+            //Send Message
+        case 010 :
+            
+            if(connectedUser !=0){
+                messages.add(uPack.getData());
+            }
+            
+            break;
+            //SetPrfileName
+        case 011:
+            if(uPack.getData() != null){
+            profileName = uPack.getData();
+        }
+            break;
+            //requestUsersUpdate
+        case 100:
+            
+            requestUsersUpdate = true;
+            
+            break;
+        
+    }
     }
 
-    public void outputObject(Object object) {
+    public void outputServerPackage(ServerPackage serverPackage) {
 
         try {
-            output.writeObject(object);
+            output.writeObject(serverPackage);
             output.flush();
         } catch (IOException e) {
-            System.out.println("Could not output object");
+            System.out.println("Could not output serverPackage");
 
         }
 
@@ -111,6 +144,62 @@ public class User implements Runnable {
         input.close();
         socket.close();
         socket = null;
+    }
+
+    /**
+     * @return the requestedUser
+     */
+    public int getRequestedUser() {
+        return requestedUser;
+    }
+
+    /**
+     * @param requestedUser the requestedUser to set
+     */
+    public void setRequestedUser(int requestedUser) {
+        this.requestedUser = requestedUser;
+    }
+
+    /**
+     * @return the connectedUser
+     */
+    public int getConnectedUser() {
+        return connectedUser;
+    }
+
+    /**
+     * @param connectedUser the connectedUser to set
+     */
+    public void setConnectedUser(int connectedUser) {
+        this.connectedUser = connectedUser;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @return the messages
+     */
+    public ArrayList<String> getMessages() {
+        return messages;
+    }
+
+    /**
+     * @return the requestUsersUpdate
+     */
+    public boolean isRequestUsersUpdate() {
+        return requestUsersUpdate;
+    }
+
+    /**
+     * @param requestUsersUpdate the requestUsersUpdate to set
+     */
+    public void setRequestUsersUpdate(boolean requestUsersUpdate) {
+        this.requestUsersUpdate = requestUsersUpdate;
     }
 
 }
