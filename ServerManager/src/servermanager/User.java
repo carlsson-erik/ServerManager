@@ -39,7 +39,7 @@ public class User implements Runnable {
     public void run() {
 
         while (true) {
-
+            
             if (socket != null) {
 
                 try {
@@ -67,11 +67,11 @@ public class User implements Runnable {
     }
 
     public void setupStreams() throws IOException {
-
+        System.out.println("Setting up streams");
         output = new ObjectOutputStream(socket.getOutputStream());
         output.flush();
         input = new ObjectInputStream(socket.getInputStream());
-
+        System.out.println("Streams setup");
     }
 
     public void whileConnected() throws IOException {

@@ -45,7 +45,9 @@ public class ServerManager extends JFrame implements Runnable {
 
     public ServerManager() {
         t = new Thread(this, "ClientManager");
-
+        
+        users = new ArrayList();
+        
         port = 4567;
 
         userCount = 0;
@@ -54,18 +56,27 @@ public class ServerManager extends JFrame implements Runnable {
 
         mainSocket = new MainSocket(port, backLog);
 
+        createAndShowGUI();
         t.start();
     }
+    
+   public void createAndShowGUI(){
+       
+   }
 
     @Override
     public void run() {
-
+        mainSocket.start();
         while (running) {
-
+            
             if (!mainSocket.getNewUsers().isEmpty()) {
                 users.add(new User(userCount, mainSocket.getNewUsers().get(0)));
                 mainSocket.getNewUsers().remove(mainSocket.getNewUsers().get(0));
-
+                System.out.println("New user");
+            }
+            
+            for(User u : users){
+                
             }
             
             
@@ -73,19 +84,5 @@ public class ServerManager extends JFrame implements Runnable {
         }
     }
 
-    public void createServerSocket(int port, int backLog) {
-        try {
-            serverSocket = new ServerSocket(port, backLog);
-        } catch (IOException ex) {
-            Logger.getLogger(ServerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void waitForConnect() throws IOException {
-
-        serverSocket.setSoTimeout(1000);
-        users.add(new User(userCount, serverSocket.accept()));
-
-    }
 
 }

@@ -17,7 +17,9 @@ public class MainSocket implements Runnable {
     private ServerSocket serverSocket;
     private ArrayList<Socket> newUsers;
 
+    private Thread t;
     public MainSocket(int port, int backLog) {
+        t = new Thread(this,"MainSocket");
         this.port = port;
         this.backLog = backLog;
         newUsers = new ArrayList();
@@ -29,6 +31,7 @@ public class MainSocket implements Runnable {
         createServerSocket(port, backLog);
 
         while (true) {
+            
             try {
                 waitForConnect();
             } catch (IOException ex) {
@@ -36,6 +39,10 @@ public class MainSocket implements Runnable {
             }
 
         }
+    }
+    
+    public void start(){
+        t.start();
     }
 
     public void createServerSocket(int port, int backLog) {
@@ -47,8 +54,9 @@ public class MainSocket implements Runnable {
     }
 
     public void waitForConnect() throws IOException {
-
+        
         newUsers.add(serverSocket.accept());
+        
 
     }
     
