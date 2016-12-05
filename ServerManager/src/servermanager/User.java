@@ -21,7 +21,7 @@ public class User implements Runnable {
     private String profileName;
     private int requestedUser;
     private int connectedUser;
-    private ArrayList<String> messages;
+    private ArrayList<UserPackage> userPackages;
 
     private Socket socket;
     private ObjectOutputStream output;
